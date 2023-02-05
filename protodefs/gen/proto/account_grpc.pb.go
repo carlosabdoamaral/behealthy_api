@@ -20,6 +20,9 @@ const _ = grpc.SupportPackageIsVersion7
 type AccountServiceClient interface {
 	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*Status, error)
 	SoftDelete(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error)
+	Restore(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error)
+	Block(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error)
+	Unblock(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error)
 }
 
 type accountServiceClient struct {
@@ -48,12 +51,42 @@ func (c *accountServiceClient) SoftDelete(ctx context.Context, in *UpdateAccount
 	return out, nil
 }
 
+func (c *accountServiceClient) Restore(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/proto.AccountService/Restore", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Block(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/proto.AccountService/Block", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Unblock(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/proto.AccountService/Unblock", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility
 type AccountServiceServer interface {
 	UpdatePassword(context.Context, *UpdatePasswordRequest) (*Status, error)
 	SoftDelete(context.Context, *UpdateAccountStatus) (*Status, error)
+	Restore(context.Context, *UpdateAccountStatus) (*Status, error)
+	Block(context.Context, *UpdateAccountStatus) (*Status, error)
+	Unblock(context.Context, *UpdateAccountStatus) (*Status, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -66,6 +99,15 @@ func (UnimplementedAccountServiceServer) UpdatePassword(context.Context, *Update
 }
 func (UnimplementedAccountServiceServer) SoftDelete(context.Context, *UpdateAccountStatus) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SoftDelete not implemented")
+}
+func (UnimplementedAccountServiceServer) Restore(context.Context, *UpdateAccountStatus) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Restore not implemented")
+}
+func (UnimplementedAccountServiceServer) Block(context.Context, *UpdateAccountStatus) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Block not implemented")
+}
+func (UnimplementedAccountServiceServer) Unblock(context.Context, *UpdateAccountStatus) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Unblock not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 
@@ -116,6 +158,60 @@ func _AccountService_SoftDelete_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_Restore_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAccountStatus)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Restore(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AccountService/Restore",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Restore(ctx, req.(*UpdateAccountStatus))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Block_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAccountStatus)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Block(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AccountService/Block",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Block(ctx, req.(*UpdateAccountStatus))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Unblock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAccountStatus)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Unblock(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AccountService/Unblock",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Unblock(ctx, req.(*UpdateAccountStatus))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +226,18 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SoftDelete",
 			Handler:    _AccountService_SoftDelete_Handler,
+		},
+		{
+			MethodName: "Restore",
+			Handler:    _AccountService_Restore_Handler,
+		},
+		{
+			MethodName: "Block",
+			Handler:    _AccountService_Block_Handler,
+		},
+		{
+			MethodName: "Unblock",
+			Handler:    _AccountService_Unblock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

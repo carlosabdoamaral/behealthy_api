@@ -14,3 +14,15 @@ func (s *AccountServer) UpdatePassword(ctx context.Context, req *pb.UpdatePasswo
 func (*AccountServer) SoftDelete(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, error) {
 	return persistence.SoftDelete(ctx, req)
 }
+
+func (*AccountServer) Restore(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, error) {
+	return persistence.Restore(ctx, req)
+}
+
+func (*AccountServer) Block(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, error) {
+	return persistence.Block(ctx, req)
+}
+
+func (*AccountServer) Unblock(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, error) {
+	return persistence.Unblock(ctx, req)
+}

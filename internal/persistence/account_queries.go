@@ -43,3 +43,27 @@ func (*AccountQueries) SoftDelete(email string) string {
 	WHERE email = '%s'
 	`, email)
 }
+
+func (*AccountQueries) Restore(email string) string {
+	return fmt.Sprintf(`
+	UPDATE account_tb
+	SET soft_deleted = FALSE
+	WHERE email = '%s'
+	`, email)
+}
+
+func (*AccountQueries) Block(email string) string {
+	return fmt.Sprintf(`
+	UPDATE account_tb
+	SET is_blocked = TRUE
+	WHERE email = '%s'
+	`, email)
+}
+
+func (*AccountQueries) Unblock(email string) string {
+	return fmt.Sprintf(`
+	UPDATE account_tb
+	SET is_blocked = FALSE
+	WHERE email = '%s'
+	`, email)
+}

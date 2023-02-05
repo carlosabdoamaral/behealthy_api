@@ -8,6 +8,9 @@ import "common.proto";
 service AccountService { 
     rpc UpdatePassword(UpdatePasswordRequest) returns (Status);
     rpc SoftDelete(UpdateAccountStatus) returns (Status);
+    rpc Restore(UpdateAccountStatus) returns (Status);
+    rpc Block(UpdateAccountStatus) returns (Status);
+    rpc Unblock(UpdateAccountStatus) returns (Status);
 }
 
 message UpdatePasswordRequest{

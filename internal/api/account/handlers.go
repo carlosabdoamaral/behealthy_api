@@ -73,3 +73,60 @@ func HandleSoftDelete(ctx *gin.Context) {
 
 	ctx.IndentedJSON(http.StatusOK, status.GetMessage())
 }
+
+func HandleRestore(ctx *gin.Context) {
+	body, err := updateAccountStatusValidations(ctx)
+	if err != nil {
+		common.LogError(err.Error())
+		ctx.IndentedJSON(http.StatusConflict, err.Error())
+		return
+	}
+
+	protoMsg := responses.NewUpdateAccountStatusFromJSONToProto(body)
+	status, err := common.AccountServiceClient.Restore(ctx.Request.Context(), protoMsg)
+	if err != nil {
+		common.LogError(err.Error())
+		ctx.IndentedJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, status.GetMessage())
+}
+
+func HandleBlock(ctx *gin.Context) {
+	body, err := updateAccountStatusValidations(ctx)
+	if err != nil {
+		common.LogError(err.Error())
+		ctx.IndentedJSON(http.StatusConflict, err.Error())
+		return
+	}
+
+	protoMsg := responses.NewUpdateAccountStatusFromJSONToProto(body)
+	status, err := common.AccountServiceClient.Block(ctx.Request.Context(), protoMsg)
+	if err != nil {
+		common.LogError(err.Error())
+		ctx.IndentedJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, status.GetMessage())
+}
+
+func HandleUnblock(ctx *gin.Context) {
+	body, err := updateAccountStatusValidations(ctx)
+	if err != nil {
+		common.LogError(err.Error())
+		ctx.IndentedJSON(http.StatusConflict, err.Error())
+		return
+	}
+
+	protoMsg := responses.NewUpdateAccountStatusFromJSONToProto(body)
+	status, err := common.AccountServiceClient.Unblock(ctx.Request.Context(), protoMsg)
+	if err != nil {
+		common.LogError(err.Error())
+		ctx.IndentedJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	ctx.IndentedJSON(http.StatusOK, status.GetMessage())
+}

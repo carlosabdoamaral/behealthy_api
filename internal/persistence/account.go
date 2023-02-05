@@ -39,3 +39,51 @@ func SoftDelete(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, e
 		Message: "account soft deleted sucessfully",
 	}, nil
 }
+
+func Restore(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, error) {
+	var (
+		db    *sql.DB = common.Database
+		query string  = AccountQueriesBuilder.Restore(req.GetEmail())
+	)
+
+	_, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.Status{
+		Message: "account restored sucessfully",
+	}, nil
+}
+
+func Block(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, error) {
+	var (
+		db    *sql.DB = common.Database
+		query string  = AccountQueriesBuilder.Block(req.GetEmail())
+	)
+
+	_, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.Status{
+		Message: "account blocked sucessfully",
+	}, nil
+}
+
+func Unblock(ctx context.Context, req *pb.UpdateAccountStatus) (*pb.Status, error) {
+	var (
+		db    *sql.DB = common.Database
+		query string  = AccountQueriesBuilder.Unblock(req.GetEmail())
+	)
+
+	_, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.Status{
+		Message: "account unblocked sucessfully",
+	}, nil
+}
