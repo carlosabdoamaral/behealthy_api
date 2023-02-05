@@ -1,0 +1,24 @@
+syntax = "proto3";
+package proto;
+option go_package = "./proto";
+
+import "google/protobuf/timestamp.proto";
+
+service AccountService { 
+
+}
+
+message AccountDetails {
+    int64 account_id = 1;
+    string full_name = 2;
+    string user_name = 3;
+    string email = 4;
+    string password = 5;
+    google.protobuf.Timestamp birth_date = 6;
+    string role = 7;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
+    bool soft_deleted = 10;
+    bool is_blocked = 11;
+    string two_factor_code = 12;
+}

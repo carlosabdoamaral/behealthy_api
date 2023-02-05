@@ -3,6 +3,7 @@ package common
 import (
 	"database/sql"
 
+	pb "github.com/carlosabdoamaral/behealthy_api/protodefs/gen/proto"
 	"github.com/gin-gonic/gin"
 	"github.com/streadway/amqp"
 	"google.golang.org/grpc"
@@ -41,5 +42,12 @@ var (
 var (
 	GrpcServer *grpc.Server     = &grpc.Server{}
 	GrpcConn   *grpc.ClientConn = &grpc.ClientConn{}
-	// AccountServiceClient                     = pb.NewAccountServiceClient(GrpcConn) // Just an example
+)
+
+var (
+	AccountServiceClient  = pb.NewAccountServiceClient(GrpcConn)
+	AuthServiceClient     = pb.NewAuthServiceClient(GrpcConn)
+	ExerciseServiceClient = pb.NewExerciseServiceClient(GrpcConn)
+	ReportServiceClient   = pb.NewReportServiceClient(GrpcConn)
+	WorkoutServiceClient  = pb.NewWorkoutServiceClient(GrpcConn)
 )

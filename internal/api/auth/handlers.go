@@ -131,7 +131,7 @@ func HandleRecoverPasswordValidation(ctx *gin.Context) {
 	}
 
 	bodyIsValid := func() bool {
-		return body.TwoFactorCode != "" && body.Password != ""
+		return body.TwoFactorCode != "" && body.NewPassword != ""
 	}
 
 	if !bodyIsValid() {

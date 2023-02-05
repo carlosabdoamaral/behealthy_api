@@ -19,6 +19,6 @@ type RecoverPasswordRequestModel struct {
 }
 
 type RecoverPasswordValidationRequestModel struct {
-	Password      string `json:"password"`
+	NewPassword   string `json:"new_password"`
 	TwoFactorCode string `json:"two_factor_code"`
 }
