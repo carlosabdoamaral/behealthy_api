@@ -49,6 +49,16 @@ func HandleSignIn(ctx *gin.Context) {
 		return
 	}
 
+	if protoResp.GetIsBlocked() {
+		ctx.IndentedJSON(http.StatusFound, "account is blocked")
+		return
+	}
+
+	if protoResp.GetSoftDeleted() {
+		ctx.IndentedJSON(http.StatusFound, "account is deleted")
+		return
+	}
+
 	jsonResp := responses.NewAccountDetailsFromProtoToJSON(protoResp)
 	ctx.IndentedJSON(http.StatusOK, jsonResp)
 }
