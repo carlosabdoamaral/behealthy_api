@@ -3,7 +3,10 @@
 package proto
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -15,6 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccountServiceClient interface {
+	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*Status, error)
 }
 
 type accountServiceClient struct {
@@ -25,10 +29,20 @@ func NewAccountServiceClient(cc grpc.ClientConnInterface) AccountServiceClient {
 	return &accountServiceClient{cc}
 }
 
+func (c *accountServiceClient) UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/proto.AccountService/UpdatePassword", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility
 type AccountServiceServer interface {
+	UpdatePassword(context.Context, *UpdatePasswordRequest) (*Status, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -36,6 +50,9 @@ type AccountServiceServer interface {
 type UnimplementedAccountServiceServer struct {
 }
 
+func (UnimplementedAccountServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
+}
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 
 // UnsafeAccountServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -49,13 +66,36 @@ func RegisterAccountServiceServer(s grpc.ServiceRegistrar, srv AccountServiceSer
 	s.RegisterService(&AccountService_ServiceDesc, srv)
 }
 
+func _AccountService_UpdatePassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).UpdatePassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AccountService/UpdatePassword",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).UpdatePassword(ctx, req.(*UpdatePasswordRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AccountService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "proto.AccountService",
 	HandlerType: (*AccountServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "account.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "UpdatePassword",
+			Handler:    _AccountService_UpdatePassword_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "account.proto",
 }

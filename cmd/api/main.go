@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/carlosabdoamaral/behealthy_api/common"
+	account_api "github.com/carlosabdoamaral/behealthy_api/internal/api/account"
 	auth_api "github.com/carlosabdoamaral/behealthy_api/internal/api/auth"
 	"github.com/carlosabdoamaral/behealthy_api/internal/grpc"
 	"github.com/carlosabdoamaral/behealthy_api/internal/persistence"
@@ -28,6 +29,7 @@ func main() {
 
 	routesGroup := router.Group("/api")
 	auth_api.DeclareAuthRoutes(routesGroup)
+	account_api.DeclareAccountRoutes(routesGroup)
 
 	router.Run()
 }

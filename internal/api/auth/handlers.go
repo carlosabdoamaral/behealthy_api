@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/carlosabdoamaral/behealthy_api/common"
+	"github.com/carlosabdoamaral/behealthy_api/internal/responses"
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,7 +19,7 @@ func HandleSignIn(ctx *gin.Context) {
 		return
 	}
 
-	body := &SignInRequestModel{}
+	body := &responses.SignInRequest{}
 	err = json.Unmarshal(bodyBytes, body)
 	if err != nil {
 		common.LogError(err.Error())
@@ -40,9 +41,16 @@ func HandleSignIn(ctx *gin.Context) {
 		return
 	}
 
-	// Redirects to GRPC
+	protoMsg := responses.NewSignInRequestFromJSONToProto(body)
+	protoResp, err := common.AuthServiceClient.SignIn(ctx.Request.Context(), protoMsg)
+	if err != nil {
+		common.LogError(err.Error())
+		ctx.IndentedJSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
-	ctx.IndentedJSON(http.StatusOK, body)
+	jsonResp := responses.NewAccountDetailsFromProtoToJSON(protoResp)
+	ctx.IndentedJSON(http.StatusOK, jsonResp)
 }
 
 func HandleSignUp(ctx *gin.Context) {
@@ -53,7 +61,7 @@ func HandleSignUp(ctx *gin.Context) {
 		return
 	}
 
-	body := &SignUpRequestModel{}
+	body := &responses.SignUpRequest{}
 	err = json.Unmarshal(bodyBytes, body)
 	if err != nil {
 		common.LogError(err.Error())
@@ -82,7 +90,7 @@ func HandleSignUp(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, body)
 }
 
-func HandleRecoverPassword(ctx *gin.Context) {
+func HandleRefreshTwoFactorCode(ctx *gin.Context) {
 	bodyBytes, err := io.ReadAll(ctx.Request.Body)
 	if err != nil {
 		common.LogError(err.Error())
@@ -90,7 +98,7 @@ func HandleRecoverPassword(ctx *gin.Context) {
 		return
 	}
 
-	body := &RecoverPasswordRequestModel{}
+	body := &responses.RefreshTwoFactorCodeRequest{}
 	err = json.Unmarshal(bodyBytes, body)
 	if err != nil {
 		common.LogError(err.Error())
@@ -98,50 +106,19 @@ func HandleRecoverPassword(ctx *gin.Context) {
 		return
 	}
 
-	bodyIsValid := func() bool {
-		return common.EmailIsValid(body.Email)
-	}
-
-	if !bodyIsValid() {
+	if !common.EmailIsValid(body.Email) {
 		err = errors.New("email isn't valid")
 		common.LogError(err.Error())
 		ctx.IndentedJSON(http.StatusConflict, err.Error())
 		return
 	}
 
-	// Redirects to GRPC
-
-	ctx.IndentedJSON(http.StatusOK, body)
-}
-
-func HandleRecoverPasswordValidation(ctx *gin.Context) {
-	bodyBytes, err := io.ReadAll(ctx.Request.Body)
+	status, err := common.AuthServiceClient.RefreshTwoFactorCode(ctx.Request.Context(), responses.NewRefreshTwoFactorCodeRequestFromJSONToProto(body))
 	if err != nil {
 		common.LogError(err.Error())
-		ctx.IndentedJSON(http.StatusConflict, err.Error())
+		ctx.IndentedJSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	body := &RecoverPasswordValidationRequestModel{}
-	err = json.Unmarshal(bodyBytes, body)
-	if err != nil {
-		common.LogError(err.Error())
-		ctx.IndentedJSON(http.StatusConflict, err.Error())
-		return
-	}
-
-	bodyIsValid := func() bool {
-		return body.TwoFactorCode != "" && body.NewPassword != ""
-	}
-
-	if !bodyIsValid() {
-		err = errors.New("some field is empty or isn't valid")
-		common.LogError(err.Error())
-		ctx.IndentedJSON(http.StatusConflict, err.Error())
-		return
-	}
-
-	// Redirects to GRPC
-
-	ctx.IndentedJSON(http.StatusOK, body)
+	ctx.IndentedJSON(http.StatusOK, status.GetMessage())
 }

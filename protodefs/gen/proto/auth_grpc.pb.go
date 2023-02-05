@@ -20,8 +20,8 @@ const _ = grpc.SupportPackageIsVersion7
 type AuthServiceClient interface {
 	SignIn(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*AccountDetails, error)
 	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*AccountDetails, error)
-	RecoverPassword(ctx context.Context, in *RecoverPasswordRequest, opts ...grpc.CallOption) (*Status, error)
-	RecoverPasswordValidation(ctx context.Context, in *RecoverPasswordValidationRequest, opts ...grpc.CallOption) (*Status, error)
+	RefreshTwoFactorCode(ctx context.Context, in *RefreshTwoFactorCodeRequest, opts ...grpc.CallOption) (*Status, error)
+	ValidateTwoFactorCode(ctx context.Context, in *TwoFactorCode, opts ...grpc.CallOption) (*Status, error)
 }
 
 type authServiceClient struct {
@@ -50,18 +50,18 @@ func (c *authServiceClient) SignUp(ctx context.Context, in *SignUpRequest, opts 
 	return out, nil
 }
 
-func (c *authServiceClient) RecoverPassword(ctx context.Context, in *RecoverPasswordRequest, opts ...grpc.CallOption) (*Status, error) {
+func (c *authServiceClient) RefreshTwoFactorCode(ctx context.Context, in *RefreshTwoFactorCodeRequest, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
-	err := c.cc.Invoke(ctx, "/proto.AuthService/RecoverPassword", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/RefreshTwoFactorCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) RecoverPasswordValidation(ctx context.Context, in *RecoverPasswordValidationRequest, opts ...grpc.CallOption) (*Status, error) {
+func (c *authServiceClient) ValidateTwoFactorCode(ctx context.Context, in *TwoFactorCode, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
-	err := c.cc.Invoke(ctx, "/proto.AuthService/RecoverPasswordValidation", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto.AuthService/ValidateTwoFactorCode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -74,8 +74,8 @@ func (c *authServiceClient) RecoverPasswordValidation(ctx context.Context, in *R
 type AuthServiceServer interface {
 	SignIn(context.Context, *SignInRequest) (*AccountDetails, error)
 	SignUp(context.Context, *SignUpRequest) (*AccountDetails, error)
-	RecoverPassword(context.Context, *RecoverPasswordRequest) (*Status, error)
-	RecoverPasswordValidation(context.Context, *RecoverPasswordValidationRequest) (*Status, error)
+	RefreshTwoFactorCode(context.Context, *RefreshTwoFactorCodeRequest) (*Status, error)
+	ValidateTwoFactorCode(context.Context, *TwoFactorCode) (*Status, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -89,11 +89,11 @@ func (UnimplementedAuthServiceServer) SignIn(context.Context, *SignInRequest) (*
 func (UnimplementedAuthServiceServer) SignUp(context.Context, *SignUpRequest) (*AccountDetails, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
 }
-func (UnimplementedAuthServiceServer) RecoverPassword(context.Context, *RecoverPasswordRequest) (*Status, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RecoverPassword not implemented")
+func (UnimplementedAuthServiceServer) RefreshTwoFactorCode(context.Context, *RefreshTwoFactorCodeRequest) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshTwoFactorCode not implemented")
 }
-func (UnimplementedAuthServiceServer) RecoverPasswordValidation(context.Context, *RecoverPasswordValidationRequest) (*Status, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RecoverPasswordValidation not implemented")
+func (UnimplementedAuthServiceServer) ValidateTwoFactorCode(context.Context, *TwoFactorCode) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ValidateTwoFactorCode not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -144,38 +144,38 @@ func _AuthService_SignUp_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_RecoverPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RecoverPasswordRequest)
+func _AuthService_RefreshTwoFactorCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshTwoFactorCodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).RecoverPassword(ctx, in)
+		return srv.(AuthServiceServer).RefreshTwoFactorCode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AuthService/RecoverPassword",
+		FullMethod: "/proto.AuthService/RefreshTwoFactorCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RecoverPassword(ctx, req.(*RecoverPasswordRequest))
+		return srv.(AuthServiceServer).RefreshTwoFactorCode(ctx, req.(*RefreshTwoFactorCodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_RecoverPasswordValidation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RecoverPasswordValidationRequest)
+func _AuthService_ValidateTwoFactorCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TwoFactorCode)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).RecoverPasswordValidation(ctx, in)
+		return srv.(AuthServiceServer).ValidateTwoFactorCode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto.AuthService/RecoverPasswordValidation",
+		FullMethod: "/proto.AuthService/ValidateTwoFactorCode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RecoverPasswordValidation(ctx, req.(*RecoverPasswordValidationRequest))
+		return srv.(AuthServiceServer).ValidateTwoFactorCode(ctx, req.(*TwoFactorCode))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -196,12 +196,12 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_SignUp_Handler,
 		},
 		{
-			MethodName: "RecoverPassword",
-			Handler:    _AuthService_RecoverPassword_Handler,
+			MethodName: "RefreshTwoFactorCode",
+			Handler:    _AuthService_RefreshTwoFactorCode_Handler,
 		},
 		{
-			MethodName: "RecoverPasswordValidation",
-			Handler:    _AuthService_RecoverPasswordValidation_Handler,
+			MethodName: "ValidateTwoFactorCode",
+			Handler:    _AuthService_ValidateTwoFactorCode_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

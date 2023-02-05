@@ -8,8 +8,8 @@ import "account.proto";
 service AuthService {
     rpc SignIn(SignInRequest) returns (AccountDetails);
     rpc SignUp(SignUpRequest) returns (AccountDetails);
-    rpc RecoverPassword(RecoverPasswordRequest) returns (Status);
-    rpc RecoverPasswordValidation(RecoverPasswordValidationRequest) returns (Status);
+    rpc RefreshTwoFactorCode(RefreshTwoFactorCodeRequest) returns (Status);
+    rpc ValidateTwoFactorCode(TwoFactorCode) returns (Status);
 }
 
 message SignInRequest {
@@ -26,11 +26,11 @@ message SignUpRequest {
 	string role = 6;
 }
 
-message RecoverPasswordRequest{
+message RefreshTwoFactorCodeRequest{
     string email = 1;
 }
 
-message RecoverPasswordValidationRequest{
-    string new_password = 1;
+message TwoFactorCode {
+    string email = 1;
     string two_factor_code = 2;
 }

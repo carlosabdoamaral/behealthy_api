@@ -5,12 +5,28 @@ import (
 	"net"
 
 	"github.com/carlosabdoamaral/behealthy_api/common"
+	pb "github.com/carlosabdoamaral/behealthy_api/protodefs/gen/proto"
 	"google.golang.org/grpc"
 )
 
-type TemplateServer struct {
-	// pb.UnimplementedAccountServiceServer
+type AccountServer struct {
+	pb.UnimplementedAccountServiceServer
+}
 
+type AuthServer struct {
+	pb.UnimplementedAuthServiceServer
+}
+
+type ExerciseServer struct {
+	pb.UnimplementedExerciseServiceServer
+}
+
+type ReportServer struct {
+	pb.UnimplementedReportServiceServer
+}
+
+type WorkoutServer struct {
+	pb.UnimplementedWorkoutServiceServer
 }
 
 func ServeGrpcServer() {
@@ -22,7 +38,11 @@ func ServeGrpcServer() {
 	}
 
 	common.GrpcServer = grpc.NewServer()
-	// pb.RegisterAccountServiceServer(common.GrpcServer, &TemplateServer{})
+	pb.RegisterAccountServiceServer(common.GrpcServer, &AccountServer{})
+	pb.RegisterAuthServiceServer(common.GrpcServer, &AuthServer{})
+	pb.RegisterExerciseServiceServer(common.GrpcServer, &ExerciseServer{})
+	pb.RegisterReportServiceServer(common.GrpcServer, &ReportServer{})
+	pb.RegisterWorkoutServiceServer(common.GrpcServer, &WorkoutServer{})
 
 	fmt.Printf("[*] Server listening on %v", lis.Addr())
 	err = common.GrpcServer.Serve(lis)

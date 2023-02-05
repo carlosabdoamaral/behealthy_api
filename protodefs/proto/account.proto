@@ -3,9 +3,16 @@ package proto;
 option go_package = "./proto";
 
 import "google/protobuf/timestamp.proto";
+import "common.proto";
 
 service AccountService { 
+    rpc UpdatePassword(UpdatePasswordRequest) returns (Status);
+}
 
+message UpdatePasswordRequest{
+    string email = 1;
+    string new_password = 2;
+    string two_factor_code = 3;
 }
 
 message AccountDetails {
