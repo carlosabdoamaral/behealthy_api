@@ -57,3 +57,17 @@ func NewUpdatePasswordFromProtoToJSON(model *pb.UpdatePasswordRequest) *UpdatePa
 		TwoFactorCode: model.GetTwoFactorCode(),
 	}
 }
+
+func NewUpdateAccountStatusFromProtoToJSON(model *pb.UpdateAccountStatus) *UpdateAccountRequest {
+	return &UpdateAccountRequest{
+		Email:         model.GetEmail(),
+		TwoFactorCode: model.GetTwoFactorCode(),
+	}
+}
+
+func NewUpdateAccountStatusFromJSONToProto(model *UpdateAccountStatusRequest) *pb.UpdateAccountStatus {
+	return &pb.UpdateAccountStatus{
+		Email:         model.Email,
+		TwoFactorCode: model.TwoFactorCode,
+	}
+}

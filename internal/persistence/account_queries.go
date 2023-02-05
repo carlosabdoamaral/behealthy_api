@@ -35,3 +35,11 @@ func (*AccountQueries) UpdatePassword(email, password string) string {
 	WHERE email = '%s'
 	`, password, email)
 }
+
+func (*AccountQueries) SoftDelete(email string) string {
+	return fmt.Sprintf(`
+	UPDATE account_tb
+	SET soft_deleted = TRUE
+	WHERE email = '%s'
+	`, email)
+}

@@ -30,18 +30,8 @@ type UpdateAccountRequest struct {
 	TwoFactorCode string    `json:"two_factor_code"`
 }
 
-type SoftDeleteAccountRequest struct {
-	AccountId     int64  `json:"account_id"`
-	TwoFactorCode string `json:"two_factor_code"`
-}
-
-type RestoreAccountRequest struct {
-	AccountId     int64  `json:"account_id"`
-	TwoFactorCode string `json:"two_factor_code"`
-}
-
-type DeleteAccountRequest struct {
-	AccountId     int64  `json:"account_id"`
+type UpdateAccountStatusRequest struct {
+	Email         string `json:"email"`
 	TwoFactorCode string `json:"two_factor_code"`
 }
 

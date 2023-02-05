@@ -7,6 +7,7 @@ import "common.proto";
 
 service AccountService { 
     rpc UpdatePassword(UpdatePasswordRequest) returns (Status);
+    rpc SoftDelete(UpdateAccountStatus) returns (Status);
 }
 
 message UpdatePasswordRequest{
@@ -28,4 +29,9 @@ message AccountDetails {
     bool soft_deleted = 10;
     bool is_blocked = 11;
     string two_factor_code = 12;
+}
+
+message UpdateAccountStatus {
+    string email = 1;
+    string two_factor_code = 2;
 }

@@ -19,6 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AccountServiceClient interface {
 	UpdatePassword(ctx context.Context, in *UpdatePasswordRequest, opts ...grpc.CallOption) (*Status, error)
+	SoftDelete(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error)
 }
 
 type accountServiceClient struct {
@@ -38,11 +39,21 @@ func (c *accountServiceClient) UpdatePassword(ctx context.Context, in *UpdatePas
 	return out, nil
 }
 
+func (c *accountServiceClient) SoftDelete(ctx context.Context, in *UpdateAccountStatus, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
+	err := c.cc.Invoke(ctx, "/proto.AccountService/SoftDelete", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility
 type AccountServiceServer interface {
 	UpdatePassword(context.Context, *UpdatePasswordRequest) (*Status, error)
+	SoftDelete(context.Context, *UpdateAccountStatus) (*Status, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -52,6 +63,9 @@ type UnimplementedAccountServiceServer struct {
 
 func (UnimplementedAccountServiceServer) UpdatePassword(context.Context, *UpdatePasswordRequest) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdatePassword not implemented")
+}
+func (UnimplementedAccountServiceServer) SoftDelete(context.Context, *UpdateAccountStatus) (*Status, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SoftDelete not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 
@@ -84,6 +98,24 @@ func _AccountService_UpdatePassword_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_SoftDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAccountStatus)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).SoftDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.AccountService/SoftDelete",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).SoftDelete(ctx, req.(*UpdateAccountStatus))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +126,10 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdatePassword",
 			Handler:    _AccountService_UpdatePassword_Handler,
+		},
+		{
+			MethodName: "SoftDelete",
+			Handler:    _AccountService_SoftDelete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
