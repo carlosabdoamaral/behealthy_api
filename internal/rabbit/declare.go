@@ -3,7 +3,7 @@ package rabbit
 import (
 	"log"
 
-	"github.com/username/.../backend/common"
+	"github.com/carlosabdoamaral/behealthy_api/common"
 )
 
 func DeclareQueue() {

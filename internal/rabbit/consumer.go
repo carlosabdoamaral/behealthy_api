@@ -1,10 +1,9 @@
 package rabbit
 
 import (
-	"context"
 	"fmt"
 
-	"github.com/username/.../backend/common"
+	"github.com/carlosabdoamaral/behealthy_api/common"
 )
 
 func StartConsuming() {
@@ -22,15 +21,17 @@ func StartConsuming() {
 		return
 	}
 
+	fmt.Println(msgs)
+
 	forever := make(chan bool)
 	go func() {
 		fmt.Println("[*] Waiting for new messages")
 
-		for m := range msgs {
-			// if m.Type == common.CREATE_OCCURRENCE_RABBIT_MSG_TYPE {
-			// 	ConsumeCreateOccurrenceRequest(context.Background(), m.Body)
-			// }
-		}
+		// for m := range msgs {
+		// if m.Type == common.CREATE_OCCURRENCE_RABBIT_MSG_TYPE {
+		// 	ConsumeCreateOccurrenceRequest(context.Background(), m.Body)
+		// }
+		// }
 	}()
 
 	<-forever

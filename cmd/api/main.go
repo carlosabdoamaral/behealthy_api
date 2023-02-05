@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/username/.../backend/common"
-	"github.com/username/.../backend/internal/api/some_service"
-	"github.com/username/.../backend/internal/grpc"
-	"github.com/username/.../backend/internal/persistence"
-	"github.com/username/.../backend/internal/rabbit"
+	"github.com/carlosabdoamaral/behealthy_api/common"
+	auth_api "github.com/carlosabdoamaral/behealthy_api/internal/api/auth"
+	"github.com/carlosabdoamaral/behealthy_api/internal/grpc"
+	"github.com/carlosabdoamaral/behealthy_api/internal/persistence"
+	"github.com/carlosabdoamaral/behealthy_api/internal/rabbit"
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,8 +25,9 @@ func main() {
 
 	router := gin.Default()
 	router.Use(CORS())
-	
-	some_service.DeclareSomeServiceRoutes(router)
+
+	routesGroup := router.Group("/api")
+	auth_api.DeclareAuthRoutes(routesGroup)
 
 	router.Run()
 }

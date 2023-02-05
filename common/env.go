@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/streadway/amqp"
-	pb "github.com/username/.../backend/protodefs/gen/proto"
 	"google.golang.org/grpc"
 )
 
@@ -40,7 +39,7 @@ var (
 )
 
 var (
-	GrpcServer              *grpc.Server     = &grpc.Server{}
-	GrpcConn                *grpc.ClientConn = &grpc.ClientConn{}
+	GrpcServer *grpc.Server     = &grpc.Server{}
+	GrpcConn   *grpc.ClientConn = &grpc.ClientConn{}
 	// AccountServiceClient                     = pb.NewAccountServiceClient(GrpcConn) // Just an example
 )

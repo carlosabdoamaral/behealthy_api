@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/username/.../backend/common"
-	pb "github.com/username/.../backend/protodefs/gen/proto"
+	"github.com/carlosabdoamaral/behealthy_api/common"
 	"google.golang.org/grpc"
 )
 
 type TemplateServer struct {
 	// pb.UnimplementedAccountServiceServer
-	
+
 }
 
 func ServeGrpcServer() {
@@ -23,7 +22,7 @@ func ServeGrpcServer() {
 	}
 
 	common.GrpcServer = grpc.NewServer()
-	pb.RegisterAccountServiceServer(common.GrpcServer, &TemplateServer{})
+	// pb.RegisterAccountServiceServer(common.GrpcServer, &TemplateServer{})
 
 	fmt.Printf("[*] Server listening on %v", lis.Addr())
 	err = common.GrpcServer.Serve(lis)

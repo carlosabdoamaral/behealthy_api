@@ -4,8 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/username/.../backend/common"
-	pb "github.com/username/.../backend/protodefs/gen/proto"
+	"github.com/carlosabdoamaral/behealthy_api/common"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -21,7 +20,7 @@ func ConnectToGRPCServer() *grpc.ClientConn {
 	}
 
 	common.GrpcConn = conn
-	common.TemplateServiceClient = pb.NewTemplateServiceClient(conn)
+	// common.TemplateServiceClient = pb.NewTemplateServiceClient(conn)
 
 	return conn
 }

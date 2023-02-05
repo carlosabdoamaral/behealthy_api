@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/username/.../backend/common"
+	"github.com/carlosabdoamaral/behealthy_api/common"
 	_ "github.com/lib/pq"
 )
 

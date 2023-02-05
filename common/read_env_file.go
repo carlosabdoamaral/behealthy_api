@@ -15,7 +15,7 @@ func GetEnvVariables() error {
 		return errEnv
 	}
 
-	DatabaseUses = os.Getenv("DB_USER")
+	DatabaseUser = os.Getenv("DB_USER")
 	DatabasePass = os.Getenv("DB_PASS")
 	DatabaseHost = os.Getenv("DB_HOST")
 	DatabaseName = os.Getenv("DB_NAME")

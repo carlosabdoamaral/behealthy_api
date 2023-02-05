@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/username/.../backend/common"
-	"github.com/username/.../backend/internal/grpc"
-	"github.com/username/.../backend/internal/persistence"
+	"github.com/carlosabdoamaral/behealthy_api/common"
+	"github.com/carlosabdoamaral/behealthy_api/internal/grpc"
+	"github.com/carlosabdoamaral/behealthy_api/internal/persistence"
 )
 
 func main() {

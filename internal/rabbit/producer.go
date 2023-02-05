@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/username/.../backend/common"
+	"github.com/carlosabdoamaral/behealthy_api/common"
 	"github.com/streadway/amqp"
 )
 

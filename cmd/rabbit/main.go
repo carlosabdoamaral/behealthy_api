@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/username/.../backend/common"
-	"github.com/username/.../backend/internal/grpc"
-	"github.com/username/.../backend/internal/rabbit"
+	"github.com/carlosabdoamaral/behealthy_api/common"
+	"github.com/carlosabdoamaral/behealthy_api/internal/grpc"
+	"github.com/carlosabdoamaral/behealthy_api/internal/rabbit"
 )
 
 func main() {
