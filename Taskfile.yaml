@@ -1,0 +1,30 @@
+version: "3"
+
+tasks:
+  grpc:
+    cmds:
+      - go run cmd/grpc/main.go
+
+  rabbit:
+    cmds:
+      - go run cmd/rabbit/main.go
+
+  api:
+    cmds:
+      - go run cmd/api/main.go
+
+  migration-up:
+    cmds:
+      - migrate -path ./internal/persistence/migrations -database "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable" -verbose up
+
+  migration-down:
+    cmds:
+      - migrate -path ./internal/persistence/migrations -database "postgresql://postgres:postgres@localhost:5432/postgres?sslmode=disable" -verbose down
+
+  create-migration:
+    cmds:
+      - migrate create -ext sql -dir ./internal/persistence/migrations -seq config_db
+
+  build-docker:
+    cmds:
+      - cd deployment/ && docker-compose up -d
