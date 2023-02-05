@@ -56,39 +56,15 @@ func HandleUpdatePassword(ctx *gin.Context) {
 }
 
 func HandleSoftDelete(ctx *gin.Context) {
-	bodyBytes, err := io.ReadAll(ctx.Request.Body)
+	body, err := updateAccountStatusValidations(ctx)
 	if err != nil {
 		common.LogError(err.Error())
 		ctx.IndentedJSON(http.StatusConflict, err.Error())
 		return
 	}
 
-	body := &responses.UpdateAccountStatusRequest{}
-	err = json.Unmarshal(bodyBytes, body)
-	if err != nil {
-		common.LogError(err.Error())
-		ctx.IndentedJSON(http.StatusConflict, err.Error())
-		return
-	}
-
-	if body.TwoFactorCode == "" || body.Email == "" {
-		err = errors.New("some field is empty or isn't valid")
-		common.LogError(err.Error())
-		ctx.IndentedJSON(http.StatusConflict, err.Error())
-		return
-	}
-
-	_, err = common.AuthServiceClient.ValidateTwoFactorCode(ctx.Request.Context(), &pb.TwoFactorCode{
-		Email:         body.Email,
-		TwoFactorCode: body.TwoFactorCode,
-	})
-	if err != nil {
-		common.LogError(err.Error())
-		ctx.IndentedJSON(http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	status, err := common.AccountServiceClient.SoftDelete(ctx.Request.Context(), responses.NewUpdateAccountStatusFromJSONToProto(body))
+	protoMsg := responses.NewUpdateAccountStatusFromJSONToProto(body)
+	status, err := common.AccountServiceClient.SoftDelete(ctx.Request.Context(), protoMsg)
 	if err != nil {
 		common.LogError(err.Error())
 		ctx.IndentedJSON(http.StatusInternalServerError, err.Error())
